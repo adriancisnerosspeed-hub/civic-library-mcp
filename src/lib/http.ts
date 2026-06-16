@@ -11,8 +11,8 @@ export class UpstreamError extends Error {
 
 export async function fetchJson<T = unknown>(
   url: string,
-  opts: { source: string; timeoutMs?: number },
-): Promise<T> {
+  opts: { source: string; timeoutMs?: number; allowEmpty?: boolean },
+): Promise<T | null> {
   const controller = new AbortController();
   const timeoutMs = opts.timeoutMs ?? DEFAULT_TIMEOUT_MS;
   const timer = setTimeout(() => controller.abort(), timeoutMs);
@@ -21,15 +21,24 @@ export async function fetchJson<T = unknown>(
       signal: controller.signal,
       headers: { "User-Agent": "civic-library-mcp" },
     });
+    // 204 No Content: the Census API's way of saying "no rows for that query".
+    if (res.status === 204) {
+      if (opts.allowEmpty) return null;
+      throw new UpstreamError(`${opts.source} returned no data`);
+    }
     if (!res.ok) {
       throw new UpstreamError(`${opts.source} returned HTTP ${res.status}`);
     }
     const text = await res.text();
+    if (!text.trim()) {
+      if (opts.allowEmpty) return null;
+      throw new UpstreamError(`${opts.source} returned an empty response`);
+    }
     try {
       return JSON.parse(text) as T;
     } catch {
       // Census/FEMA return an HTML error page on some failures (e.g. a bad API key).
-      throw new UpstreamError(`${opts.source} returned a non-JSON response (often a missing/invalid API key or an upstream outage)`);
+      throw new UpstreamError(`${opts.source} returned a non-JSON response (often an invalid API key or an upstream outage)`);
     }
   } catch (err) {
     if (err instanceof UpstreamError) throw err;

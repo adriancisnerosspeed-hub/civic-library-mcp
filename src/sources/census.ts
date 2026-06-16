@@ -78,7 +78,7 @@ export async function getAcs(
   variableCodes: string[],
   key: string,
   year: number,
-): Promise<Record<string, string>> {
+): Promise<Record<string, string> | null> {
   const state = tractGeoid.slice(0, 2);
   const county = tractGeoid.slice(2, 5);
   const tract = tractGeoid.slice(5, 11);
@@ -86,9 +86,10 @@ export async function getAcs(
   const url =
     `https://api.census.gov/data/${year}/acs/acs5?get=${get}` +
     `&for=tract:${tract}&in=state:${state}&in=county:${county}&key=${encodeURIComponent(key)}`;
-  const rows = await fetchJson<string[][]>(url, { source: "Census ACS API" });
-  const headers = rows?.[0];
-  const values = rows?.[1];
+  const rows = await fetchJson<string[][]>(url, { source: "Census ACS API", allowEmpty: true });
+  if (!rows) return null; // 204 / empty = no ACS rows for this tract
+  const headers = rows[0];
+  const values = rows[1];
   if (!headers || !values) return {};
   const out: Record<string, string> = {};
   headers.forEach((h, i) => (out[h] = values[i]));

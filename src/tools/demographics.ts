@@ -79,6 +79,15 @@ export function registerDemographics(server: McpServer) {
       try {
         const acs = await getAcs(tract_geoid, [...needVars], key, ACS_YEAR);
 
+        if (acs === null) {
+          return jsonResult({
+            tract_geoid,
+            found: false,
+            acs_dataset: `ACS 5-Year ${ACS_YEAR}`,
+            message: `No ACS data found for tract ${tract_geoid} in the ${ACS_YEAR} 5-year dataset — the tract may not exist in this vintage or has no published data.`,
+          });
+        }
+
         const out: Record<string, unknown> = {
           tract_geoid,
           tract_name: acs.NAME ?? null,
