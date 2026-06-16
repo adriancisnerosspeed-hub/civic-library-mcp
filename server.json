@@ -1,8 +1,8 @@
 {
-  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.adriancisnerosspeed-hub/civic-library-mcp",
-  "description": "US civic & property data: geocoding, census tracts, Opportunity Zones, ACS demographics, and FEMA flood zones — from free federal open data.",
-  "version": "0.1.0",
+  "description": "US civic & property data: geocoding, census tracts, Opportunity Zones, FEMA flood zones.",
+  "version": "0.1.1",
   "repository": {
     "url": "https://github.com/adriancisnerosspeed-hub/civic-library-mcp",
     "source": "github"
@@ -12,7 +12,7 @@
       "registryType": "npm",
       "registryBaseUrl": "https://registry.npmjs.org",
       "identifier": "civic-library-mcp",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "transport": { "type": "stdio" },
       "environmentVariables": [
         {
