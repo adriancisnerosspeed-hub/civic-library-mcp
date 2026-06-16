@@ -1,0 +1,49 @@
+{
+  "name": "civic-library-mcp",
+  "version": "0.1.0",
+  "description": "MCP server for US civic & property data — geocoding, census tracts, Opportunity Zones, ACS demographics, and FEMA flood zones, sourced entirely from free federal open data.",
+  "license": "MIT",
+  "author": "Adrian Cisneros",
+  "type": "module",
+  "bin": {
+    "civic-library-mcp": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "data",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "start": "node dist/index.js",
+    "build:oz": "tsx scripts/build-oz-data.ts",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "census",
+    "opportunity-zones",
+    "geocoding",
+    "fema",
+    "flood-zone",
+    "real-estate",
+    "proptech",
+    "civic-data"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.3",
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3",
+    "xlsx": "^0.18.5"
+  }
+}
